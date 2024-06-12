@@ -92,7 +92,7 @@ void nuovaPartita() {
     char nomeUtente[10];
     printf("Inserisci il tuo nome: ");
     fgets(nomeUtente, 10, stdin);
-    nomeUtente[strcspn(nomeUtente, "\n")] = 0; // Rimuove il carattere di newline
+    nomeUtente[strcspn(nomeUtente, "\n")] = 0; 
 
     printf("Ciao %s, iniziamo la partita.\n", nomeUtente);
     Domanda domande[NUMERO_DOMANDE];
