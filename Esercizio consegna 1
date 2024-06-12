@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <string.h>
+
+#define NUMERO_DOMANDE 6
+#define NUMERO_OPZIONI_DOMANDA 3
+
+typedef struct {
+    char domanda[256];
+    char risposte[NUMERO_OPZIONI_DOMANDA][100]; // Array di stringhe per le risposte
+    int rispostaCorretta; // Indice inizia da 0 per la risposta corretta
+} Domanda;
+
+int punteggioTotalePartita = 0;
+
+void visualizzaMenu();
+void nuovaPartita();
+int nuovaDomanda(Domanda q);
+void mostraPunteggioFinale(int punteggio);
+void mostraPunteggioTotale();
+void impostaDomande(Domanda *domande);
+void introduzione();
+
+void introduzione() {
+    printf("\nCiao! Questo è un quiz di cultura generale!\n");
+    printf("Seleziona la risposta corretta e riceverai un punto se si rivelerà esatta.\n");
+    printf("Dai forza! Mettiti alla prova! BUONA FORTUNA!\n");
+}
+
+void impostaDomande(Domanda *domande) {
+    strcpy(domande[0].domanda, "Quale pianeta è conosciuto come il pianeta rosso?");
+    strcpy(domande[0].risposte[0], "Giove");
+    strcpy(domande[0].risposte[1], "Marte");
+    strcpy(domande[0].risposte[2], "Venere");
+    domande[0].rispostaCorretta = 1;
+
+    strcpy(domande[1].domanda, "In quale città si trova la Torre Eiffel?");
+    strcpy(domande[1].risposte[0], "Parigi");
+    strcpy(domande[1].risposte[1], "Londra");
+    strcpy(domande[1].risposte[2], "Madrid");
+    domande[1].rispostaCorretta = 0;
+
+    strcpy(domande[2].domanda, "Qual è il fiume più lungo d'Italia?");
+    strcpy(domande[2].risposte[0], "Tevere");
+    strcpy(domande[2].risposte[1], "Arno");
+    strcpy(domande[2].risposte[2], "Po");
+    domande[2].rispostaCorretta = 2;
+
+    strcpy(domande[3].domanda, "Qual è il gas più abbondante nell'atmosfera terrestre?");
+    strcpy(domande[3].risposte[0], "Ossigeno");
+    strcpy(domande[3].risposte[1], "Azoto");
+    strcpy(domande[3].risposte[2], "Anidride carbonica");
+    domande[3].rispostaCorretta = 1;
+
+    strcpy(domande[4].domanda, "Chi ha scritto 'I Promessi Sposi'?");
+    strcpy(domande[4].risposte[0], "Alessandro Manzoni");
+    strcpy(domande[4].risposte[1], "Francesco Petrarca");
+    strcpy(domande[4].risposte[2], "Giacomo Leopardi");
+    domande[4].rispostaCorretta = 0;
+
+    strcpy(domande[5].domanda, "Quale organo è il principale nel sistema circolatorio umano?");
+    strcpy(domande[5].risposte[0], "Polmoni");
+    strcpy(domande[5].risposte[1], "Rene");
+    strcpy(domande[5].risposte[2], "Cuore");
+    domande[5].rispostaCorretta = 2;
+}
+
+void visualizzaMenu() {
+    char scelta;
+    printf("Benvenuto!\n");
+    do {
+        printf("A) Nuova partita\nB) Esci\n");
+        printf("Inserisci (A/B): ");
+        scelta = getchar();
+        while (getchar() != '\n'); // Pulizia del buffer di input
+
+        switch (scelta) {
+            case 'A':
+            case 'a':
+                nuovaPartita();
+                break;
+            case 'B':
+            case 'b':
+                printf("Grazie per esserti messo alla prova! A presto!\n");
+                exit(0);
+            default:
+                printf("Scelta non valida. Inserisci A o B.\n");
+        }
+    } while (scelta != 'A' && scelta != 'B');
+}
+
+void nuovaPartita() {
+    char nomeUtente[10];
+    printf("Inserisci il tuo nome: ");
+    fgets(nomeUtente, 10, stdin);
+    nomeUtente[strcspn(nomeUtente, "\n")] = 0; // Rimuove il carattere di newline
+
+    printf("Ciao %s, iniziamo la partita.\n", nomeUtente);
+    Domanda domande[NUMERO_DOMANDE];
+    impostaDomande(domande);
+    int punteggio = 0;
+
+    for (int i = 0; i < NUMERO_DOMANDE; i++) {
+        punteggio += nuovaDomanda(domande[i]);
+    }
+
+    punteggioTotalePartita += punteggio;
+    mostraPunteggioFinale(punteggio);
+    mostraPunteggioTotale();
+}
+
+int nuovaDomanda(Domanda q) {
+    int rispostaUtente;
+
+    printf("\n%s\n", q.domanda);
+    for (int i = 0; i < NUMERO_OPZIONI_DOMANDA; i++) {
+        printf("%d. %s\n", i + 1, q.risposte[i]);
+    }
+    printf("Digita il numero della risposta corretta: ");
+    scanf("%d", &rispostaUtente);
+    while (getchar() != '\n'); // Pulizia del buffer di input
+
+    if (rispostaUtente - 1 == q.rispostaCorretta) {
+        printf("Esatto!\n");
+        return 1;
+    } else {
+        printf("Errato! La risposta corretta è %d. %s\n", q.rispostaCorretta + 1, q.risposte[q.rispostaCorretta]);
+        return 0;
+    }
+}
+
+void mostraPunteggioFinale(int punteggio) {
+    printf("Il tuo punteggio finale è: %d su %d.\n", punteggio, NUMERO_DOMANDE);
+}
+
+void mostraPunteggioTotale() {
+    printf("Fino ad ora hai totalizzato: %d punti.\n", punteggioTotalePartita);
+}
+
+int main() {
+    introduzione();
+    visualizzaMenu();
+
+    return 0;
+}
