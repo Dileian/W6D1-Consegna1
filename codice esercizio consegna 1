@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define NUMERO_DOMANDE 6
 #define NUMERO_OPZIONI_DOMANDA 3
